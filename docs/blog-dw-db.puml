@@ -1,0 +1,69 @@
+@startuml
+
+skinparam linetype ortho
+
+entity "blog_activity" as blog_activity {
+  *blog_id : INT <<PK>>
+  --
+  *user_id : INT <<FK>>
+  *content_id : INT <<FK>>
+  *comment_id : INT <<FK>>
+  *favorite_id : INT <<FK>>
+  *opinion_id : INT <<FK>>
+  *tag_id : INT <<FK>>
+}
+
+entity "users" as users {
+  *user_id : INT <<PK>>
+  --
+  first_name : VARCHAR(50)
+  last_name : VARCHAR(50)
+  email : VARCHAR(150)
+}
+
+entity "blog_contents" as blog_contents {
+  *content_id : INT <<PK>>
+  --
+  title : VARCHAR(150)
+  content : TEXT
+}
+
+entity "comments" as comments {
+  *comment_id : INT <<PK>>
+  --
+  content : TEXT
+}
+
+entity "favorites" as favorites {
+  *favorite_id : INT <<PK>>
+  --
+  favorite_date : DATE
+}
+
+entity "opinions" as opinions {
+  *opinion_id : INT <<PK>>
+  --
+  opinion : BOOLEAN
+}
+
+entity "tag_contents_lookup" as tag_contents_lookup {
+  *tag_content_id : INT <<PK>>
+  --
+  name: VARCHAR(50)
+}
+
+entity "tags" as tags {
+  *tag_id : INT <<PK>>
+  --
+  tag_contents : ARRAY[INT] <<FK>>
+}
+
+blog_activity }|..|| users
+blog_activity }|..|| blog_contents
+blog_activity }|..|| comments
+blog_activity }|..|| favorites
+blog_activity }|..|| opinions
+blog_activity }|..|| tags
+tags }|..|| tag_contents_lookup
+
+@enduml
