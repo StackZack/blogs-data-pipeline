@@ -1,0 +1,50 @@
+@startuml
+
+left to right direction
+
+package "SFTP Server" {
+  [blogs.csv]
+  [users.csv]
+  [comments.csv]
+  [favorites.csv]
+  [blog_tags.csv]
+  [opinions.csv]
+}
+
+database "PostgreSQL" {
+    package "Stage Tables" {
+        [stg_blogs]
+        [stg_users]
+        [stg_comments]
+        [stg_favorites]
+        [stg_blog_tags]
+        [stg_opinions]
+    }
+
+    package "Gold Tables" {
+        [blog_activity]
+        [blog_contents]
+        [users]
+        [comments]
+        [favorites]
+        [tags]
+        [opinions]
+    }
+}
+
+[blogs.csv] -down-> [stg_blogs]
+[users.csv] -down-> [stg_users]
+[comments.csv] -down-> [stg_comments]
+[favorites.csv] -down-> [stg_favorites]
+[blog_tags.csv] -down-> [stg_blog_tags]
+[opinions.csv] -down-> [stg_opinions]
+
+[stg_blogs] -down-> [blog_activity]
+[stg_blogs] -down-> [blog_contents]
+[stg_users] -down-> [users]
+[stg_comments] -down-> [comments]
+[stg_favorites] -down-> [favorites]
+[stg_blog_tags] -down-> [tags]
+[stg_opinions] -down-> [opinions]
+
+@enduml

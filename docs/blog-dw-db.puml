@@ -3,14 +3,21 @@
 skinparam linetype ortho
 
 entity "blog_activity" as blog_activity {
-  *blog_id : INT <<PK>>
+  *blog_activity_id : INT <<PK>>
   --
+  *blog_id : INT <<FK>>
   *user_id : INT <<FK>>
-  *content_id : INT <<FK>>
   *comment_id : INT <<FK>>
   *favorite_id : INT <<FK>>
   *opinion_id : INT <<FK>>
   *tag_id : INT <<FK>>
+}
+
+entity "blog" as blog {
+  *blog_id : INT <<PK>>
+  --
+  title : VARCHAR(150)
+  content : TEXT
 }
 
 entity "users" as users {
@@ -19,13 +26,6 @@ entity "users" as users {
   first_name : VARCHAR(50)
   last_name : VARCHAR(50)
   email : VARCHAR(150)
-}
-
-entity "blog_contents" as blog_contents {
-  *content_id : INT <<PK>>
-  --
-  title : VARCHAR(150)
-  content : TEXT
 }
 
 entity "comments" as comments {
@@ -59,7 +59,7 @@ entity "tags" as tags {
 }
 
 blog_activity }|..|| users
-blog_activity }|..|| blog_contents
+blog_activity }|..|| blog
 blog_activity }|..|| comments
 blog_activity }|..|| favorites
 blog_activity }|..|| opinions

@@ -101,7 +101,7 @@ def create_favorites(num_records: int) -> None:
     write_to_csv(file_name, headers, data)
 
 
-def create_blog_opinions(num_records: int) -> None:
+def create_opinions(num_records: int) -> None:
     """Creates sample blog opinion data and outputs to CSV
 
     :param num_records: Number of records to create
@@ -124,7 +124,7 @@ def create_blog_opinions(num_records: int) -> None:
     write_to_csv(file_name, headers, data)
 
 
-def create_blog_tags(num_records: int) -> None:
+def create_tags(num_records: int) -> None:
     """Creates sample blog tag data and outputs to CSV
 
     :param num_records: Number of records to create
@@ -159,5 +159,5 @@ if __name__ == "__main__":
     create_blogs(100)
     create_comments(100)
     create_favorites(100)
-    create_blog_opinions(100)
-    create_blog_tags(100)
+    create_opinions(100)
+    create_tags(100)

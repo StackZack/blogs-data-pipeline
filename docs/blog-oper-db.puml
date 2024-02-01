@@ -16,8 +16,9 @@ entity "blogs" as blogs {
   *blog_id : INT <<PK>>
   --
   *user_id : INT <<FK>>
-  blog_title : VARCHAR(150)
-  blog_content : TEXT
+  *tags : ARRAY[INT] <<FK>>
+  title : VARCHAR(150)
+  content : TEXT
   created_at : TIMESTAMP
   updated_at : TIMESTAMP
 }
@@ -42,7 +43,7 @@ entity "favorites" as favorites {
   updated_at : TIMESTAMP
 }
 
-entity "blog_opinions" as blog_opinions {
+entity "opinions" as opinions {
   *opinion_id : INT <<PK>>
   --
   *blog_id : INT <<FK>>
@@ -60,19 +61,13 @@ entity "tags" as tags {
   updated_at : TIMESTAMP
 }
 
-entity "blog_tags" as blog_tags {
-  *tag_id : INT <<FK>>
-  *blog_id : INT <<FK>>
-}
-
 users ||..o{ blogs
 users ||..o{ comments
 blogs ||..o{ comments
 users ||..o{ favorites
 blogs ||..o{ favorites
-users ||..o{ blog_opinions
-blogs ||..o{ blog_opinions
-tags ||..o{ blog_tags
-blogs ||..o{ blog_tags
+users ||..o{ opinions
+blogs ||..o{ opinions
+blogs }o..o{ tags
 
 @enduml
