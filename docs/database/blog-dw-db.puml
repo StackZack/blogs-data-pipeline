@@ -16,6 +16,7 @@ entity "blog_activity" as blog_activity {
 entity "blog" as blog {
   *blog_id : INT <<PK>>
   --
+  *tag_ids : ARRAY[INT] <<FK>>
   title : VARCHAR(150)
   content : TEXT
 }
@@ -46,16 +47,10 @@ entity "opinions" as opinions {
   opinion : BOOLEAN
 }
 
-entity "tag_contents_lookup" as tag_contents_lookup {
-  *tag_content_id : INT <<PK>>
-  --
-  name: VARCHAR(50)
-}
-
-entity "tags" as tags {
+entity "tag_lookup" as tag_lookup {
   *tag_id : INT <<PK>>
   --
-  tag_contents : ARRAY[INT] <<FK>>
+  name: VARCHAR(50)
 }
 
 blog_activity }|..|| users
@@ -63,7 +58,6 @@ blog_activity }|..|| blog
 blog_activity }|..|| comments
 blog_activity }|..|| favorites
 blog_activity }|..|| opinions
-blog_activity }|..|| tags
-tags }|..|| tag_contents_lookup
+blog }o..|| tag_lookup
 
 @enduml

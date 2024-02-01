@@ -2,32 +2,35 @@
 
 left to right direction
 
-package "SFTP Server" {
+skinparam DatabaseBackgroundColor #325ea8
+
+package "SFTP Server" #CD7F32 {
   [blogs.csv]
   [users.csv]
   [comments.csv]
   [favorites.csv]
-  [blog_tags.csv]
+  [tags.csv]
   [opinions.csv]
 }
 
 database "PostgreSQL" {
-    package "Stage Tables" {
+    note bottom of "Stage Tables" : Stage tables loaded via\nstraight load (truncate\nthen insert)
+    package "Stage Tables" #C0C0C0 {
         [stg_blogs]
         [stg_users]
         [stg_comments]
         [stg_favorites]
-        [stg_blog_tags]
+        [stg_tags]
         [stg_opinions]
     }
 
-    package "Gold Tables" {
+    note bottom of "Gold Tables" : Gold tables loaded via\nincremental PySpark\nbatch job
+    package "Gold Tables" #FFD700 {
         [blog_activity]
-        [blog_contents]
+        [blogs]
         [users]
         [comments]
         [favorites]
-        [tags]
         [opinions]
     }
 }
@@ -36,15 +39,18 @@ database "PostgreSQL" {
 [users.csv] -down-> [stg_users]
 [comments.csv] -down-> [stg_comments]
 [favorites.csv] -down-> [stg_favorites]
-[blog_tags.csv] -down-> [stg_blog_tags]
+[tags.csv] -down-> [stg_tags]
 [opinions.csv] -down-> [stg_opinions]
 
 [stg_blogs] -down-> [blog_activity]
-[stg_blogs] -down-> [blog_contents]
+[stg_comments] -down-> [blog_activity]
+[stg_favorites] -down-> [blog_activity]
+[stg_opinions] -down-> [blog_activity]
+[stg_blogs] -down-> [blogs]
 [stg_users] -down-> [users]
 [stg_comments] -down-> [comments]
 [stg_favorites] -down-> [favorites]
-[stg_blog_tags] -down-> [tags]
+[stg_tags] -down-> [blogs]
 [stg_opinions] -down-> [opinions]
 
 @enduml
