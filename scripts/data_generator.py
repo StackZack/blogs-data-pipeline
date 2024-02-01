@@ -39,7 +39,7 @@ def create_blogs(num_records: int) -> None:
     :type num_records: int
     """
     file_name = "blogs.csv"
-    headers = ["blog_id", "user_id", "blog_title", "blog_content", "created_at", "updated_at"]
+    headers = ["blog_id", "user_id", "title", "content", "created_at", "updated_at"]
     data = []
     for index in range(num_records):
         data.append(
@@ -107,7 +107,7 @@ def create_opinions(num_records: int) -> None:
     :param num_records: Number of records to create
     :type num_records: int
     """
-    file_name = "blog_opinions.csv"
+    file_name = "opinions.csv"
     headers = ["opinion_id", "blog_id", "user_id", "opinion", "created_at", "updated_at"]
     data = []
     for index in range(num_records):
@@ -130,7 +130,7 @@ def create_tags(num_records: int) -> None:
     :param num_records: Number of records to create
     :type num_records: int
     """
-    file_name = "blog_tags.csv"
+    file_name = "tags.csv"
     headers = ["tag_id", "blog_id"]
     data = []
     for _ in range(num_records):
