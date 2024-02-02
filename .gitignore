@@ -161,3 +161,6 @@ cython_debug/
 
 # PlantUML
 out/docs
+
+# Airflow
+airflow/logs
