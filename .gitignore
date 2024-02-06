@@ -163,4 +163,4 @@ cython_debug/
 out/docs
 
 # Airflow
-airflow/logs
+blog_airflow/logs
