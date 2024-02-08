@@ -16,7 +16,7 @@ DAG_NAMES = [Path(DAG_PATH).name for DAG_PATH in glob.glob(str(DAG_GLOB_EXPR))]
 
 @pytest.mark.parametrize("dag_name", DAG_NAMES)
 def test_dag_cycles(dag_name: str):
-    """Checks that each DAG can be imported and has no cycles
+    """Asserts that each DAG can be imported and has no cycles
 
     :param dag_name: Name of file containing DAG
     :type dag_name: str

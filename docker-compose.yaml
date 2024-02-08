@@ -97,7 +97,9 @@ services:
       # See https://airflow.apache.org/docs/docker-stack/entrypoint.html#signal-propagation
       DUMB_INIT_SETSID: "0"
     volumes:
+      - ${AIRFLOW_PROJ_DIR:-.}/blog_airflow/dags:/opt/airflow/dags
       - airflow-worker-nfs-volume:/home/airflow/shared/data
+      - ./docker/ssh/client/ssh_host_rsa_key.pub:/etc/ssh/ssh_host_rsa_key.pub
     restart: always
     depends_on:
       <<: *airflow-common-depends-on
@@ -190,6 +192,7 @@ services:
     image: atmoz/sftp:debian
     volumes:
       - ./sample_data:/home/blog_user/upload
+      - ./docker/ssh/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key
     ports:
       - "2222:22"
     command: blog_user:password:1001
