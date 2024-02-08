@@ -96,6 +96,8 @@ services:
       # Required to handle warm shutdown of the celery workers properly
       # See https://airflow.apache.org/docs/docker-stack/entrypoint.html#signal-propagation
       DUMB_INIT_SETSID: "0"
+    volumes:
+      - airflow-worker-nfs-volume:/home/airflow/shared/data
     restart: always
     depends_on:
       <<: *airflow-common-depends-on
@@ -187,11 +189,12 @@ services:
   sftp-server:
     image: atmoz/sftp:debian
     volumes:
-        - ./sample_data:/home/blog_user/upload
+      - ./sample_data:/home/blog_user/upload
     ports:
-        - "2222:22"
+      - "2222:22"
     command: blog_user:password:1001
 
 volumes:
   postgres-db-volume:
   datawarehouse-db-volume:
+  airflow-worker-nfs-volume:
