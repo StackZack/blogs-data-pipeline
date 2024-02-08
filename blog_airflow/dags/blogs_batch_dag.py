@@ -14,6 +14,6 @@ SFTPOperator(
     dag=dag,
     operation="get",
     ssh_conn_id="INBOUND_SFTP",
-    local_filepath="/home/airflow/shared/data/blogs.csv",
+    local_filepath="/home/airflow/blogs.csv",
     remote_filepath="/upload/blogs.csv",
 )

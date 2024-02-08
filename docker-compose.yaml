@@ -98,8 +98,7 @@ services:
       DUMB_INIT_SETSID: "0"
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}/blog_airflow/dags:/opt/airflow/dags
-      - airflow-worker-nfs-volume:/home/airflow/shared/data
-      - ./docker/ssh/client/ssh_host_rsa_key.pub:/etc/ssh/ssh_host_rsa_key.pub
+      - ./docker/ssh/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key
     restart: always
     depends_on:
       <<: *airflow-common-depends-on
@@ -192,7 +191,7 @@ services:
     image: atmoz/sftp:debian
     volumes:
       - ./sample_data:/home/blog_user/upload
-      - ./docker/ssh/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key
+      - ./docker/ssh/ssh_host_rsa_key.pub:/home/blog_user/.ssh/keys/ssh_host_rsa_key.pub
     ports:
       - "2222:22"
     command: blog_user:password:1001
@@ -200,4 +199,3 @@ services:
 volumes:
   postgres-db-volume:
   datawarehouse-db-volume:
-  airflow-worker-nfs-volume:

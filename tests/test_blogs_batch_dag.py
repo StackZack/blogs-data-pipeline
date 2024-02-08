@@ -20,4 +20,4 @@ def test_sftp_to_nfs(mocker):
     mock_retrieve_file = mocker.patch.object(SFTPHook, "retrieve_file")
     task.execute(context={})
     assert "/upload/blogs.csv" == mock_retrieve_file.call_args_list[0][0][0]
-    assert "/home/airflow/shared/data/blogs.csv" == mock_retrieve_file.call_args_list[0][0][1]
+    assert "/home/airflow/blogs.csv" == mock_retrieve_file.call_args_list[0][0][1]
