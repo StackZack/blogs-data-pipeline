@@ -1,7 +1,7 @@
 # Basic Airflow cluster configuration for CeleryExecutor with Redis and PostgreSQL.
 x-airflow-common:
   &airflow-common
-  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.8.1}
+  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.8.1-python3.11}
   env_file: &airflow-common-env
     - ./docker/envs/common.env
     - ./docker/envs/connection.env
@@ -38,6 +38,8 @@ services:
     image: redis:latest
     expose:
       - 6379
+    volumes:
+        - redis-volume:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -199,3 +201,4 @@ services:
 volumes:
   postgres-db-volume:
   datawarehouse-db-volume:
+  redis-volume:

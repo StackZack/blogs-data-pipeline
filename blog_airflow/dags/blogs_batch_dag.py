@@ -9,11 +9,15 @@ dag = DAG(
     schedule=None,
 )
 
-SFTPOperator(
-    task_id="blogs_sftp_to_nfs",
-    dag=dag,
-    operation="get",
-    ssh_conn_id="INBOUND_SFTP",
-    local_filepath="/home/airflow/blogs.csv",
-    remote_filepath="/upload/blogs.csv",
-)
+files = ["blogs.csv", "comments.csv", "favorites.csv", "opinions.csv", "tags.csv", "users.csv"]
+
+for file_name in files:
+    name = file_name.split(".csv")[0]
+    SFTPOperator(
+        task_id=f"download_{name}_file",
+        dag=dag,
+        operation="get",
+        ssh_conn_id="INBOUND_SFTP",
+        local_filepath=f"/home/airflow/{file_name}",
+        remote_filepath=f"/upload/{file_name}",
+    )
