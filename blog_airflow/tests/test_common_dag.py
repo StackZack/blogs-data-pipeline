@@ -9,7 +9,7 @@ import pytest
 from airflow.models.dag import DAG
 from airflow.utils.dag_cycle_tester import check_cycle
 
-DAG_DIR_PATH = Path(__file__).parent.parent.resolve() / "blog_airflow" / "dags"
+DAG_DIR_PATH = Path(__file__).parent.parent.resolve() / "dags"
 DAG_GLOB_EXPR = DAG_DIR_PATH / "[!__init__]*.py"
 DAG_NAMES = [Path(DAG_PATH).name for DAG_PATH in glob.glob(str(DAG_GLOB_EXPR))]
 
