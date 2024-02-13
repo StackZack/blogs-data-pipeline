@@ -18,6 +18,6 @@ for file_name in files:
         dag=dag,
         operation="get",
         ssh_conn_id="INBOUND_SFTP",
-        local_filepath=f"/home/airflow/{file_name}",
+        local_filepath=f"/home/airflow/shared/{file_name}",
         remote_filepath=f"/upload/{file_name}",
     )

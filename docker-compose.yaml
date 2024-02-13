@@ -101,6 +101,7 @@ services:
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}/blog_airflow/dags:/opt/airflow/dags
       - ./docker/ssh/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key
+      - ./docker/nfs/shared:/home/airflow/shared
     restart: always
     depends_on:
       <<: *airflow-common-depends-on
