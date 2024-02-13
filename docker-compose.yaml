@@ -181,7 +181,9 @@ services:
     env_file:
       - ./docker/envs/datawarehouse.env
     volumes:
+      - ./docker/scripts/postgres_init.sql:/docker-entrypoint-initdb.d/postgres_init.sql
       - datawarehouse-db-volume:/var/lib/postgresql/data
+      - ./docker/nfs/shared:/shared
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "user", "dw-blogs"]
       interval: 5s
