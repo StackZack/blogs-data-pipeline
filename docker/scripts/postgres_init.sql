@@ -19,9 +19,16 @@ CREATE TABLE staging.stg_comments (
     updated_at TEXT
 );
 
-CREATE TABLE staging.stg_tags (
+CREATE TABLE staging.stg_blog_tags (
     tag_id TEXT,
     blog_id TEXT
+);
+
+CREATE TABLE staging.stg_tags (
+    tag_id TEXT,
+    name TEXT,
+    created_at TEXT,
+    updated_at TEXT
 );
 
 CREATE TABLE staging.stg_blogs (

@@ -12,7 +12,7 @@ dag = DAG(
     default_args={"email_on_failure": False, "email_on_retry": False, "retries": 1},
 )
 
-files = ["blogs.csv", "comments.csv", "favorites.csv", "opinions.csv", "tags.csv", "users.csv"]
+files = ["blogs.csv", "comments.csv", "favorites.csv", "opinions.csv", "blog_tags.csv", "tags.csv", "users.csv"]
 
 for file_name in files:
     name = file_name.split(".csv")[0]
