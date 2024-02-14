@@ -13,10 +13,10 @@ entity "blog_activity" as blog_activity {
   *tag_id : INT <<FK>>
 }
 
-entity "blog" as blog {
+entity "blogs" as blogs {
   *blog_id : INT <<PK>>
   --
-  *tag_ids : ARRAY[INT] <<FK>>
+  *tag_ids : INT ARRAY <<FK>>
   title : VARCHAR(150)
   content : TEXT
 }
@@ -54,10 +54,10 @@ entity "tag_lookup" as tag_lookup {
 }
 
 blog_activity }|..|| users
-blog_activity }|..|| blog
+blog_activity }|..|| blogs
 blog_activity }|..|| comments
 blog_activity }|..|| favorites
 blog_activity }|..|| opinions
-blog }o..|| tag_lookup
+blogs }o..|| tag_lookup
 
 @enduml
