@@ -46,7 +46,7 @@ def create_blogs(num_records: int) -> None:
             [
                 index + 1,
                 index + 1,
-                fake.word(),
+                fake.catch_phrase(),
                 fake.paragraph(nb_sentences=1),
                 str(fake.date_time()),
                 str(fake.date_time()),
@@ -124,7 +124,7 @@ def create_opinions(num_records: int) -> None:
     write_to_csv(file_name, headers, data)
 
 
-def create_tags(num_records: int) -> None:
+def create_blog_tags(num_records: int) -> None:
     """Creates sample blog tag data and outputs to CSV
 
     :param num_records: Number of records to create
@@ -135,6 +135,27 @@ def create_tags(num_records: int) -> None:
     data = []
     for _ in range(num_records):
         data.append([random.randint(1, 10), random.randint(1, num_records)])
+    write_to_csv(file_name, headers, data)
+
+
+def create_tags(num_records: int) -> None:
+    """Creates sample tag data and outputs to CSV
+
+    :param num_records: Number of records to create
+    :type num_records: int
+    """
+    file_name = "tags.csv"
+    headers = ["tag_id", "name", "created_at", "updated_at"]
+    data = []
+    for index in range(num_records):
+        data.append(
+            [
+                index + 1,
+                fake.word(),
+                str(fake.date_time()),
+                str(fake.date_time()),
+            ]
+        )
     write_to_csv(file_name, headers, data)
 
 
@@ -160,4 +181,5 @@ if __name__ == "__main__":
     create_comments(100)
     create_favorites(100)
     create_opinions(100)
-    create_tags(100)
+    create_blog_tags(100)
+    create_tags(10)
