@@ -1,15 +1,20 @@
 import datetime
+from datetime import timedelta
 
 from airflow import DAG
 from airflow.models.baseoperator import chain
+
+# from airflow.providers.apache.spark.operators.spark_jdbc import SparkJDBCOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.providers.sftp.operators.sftp import SFTPOperator
+
+default_args = {"retry_delay": timedelta(minutes=5), "email_on_failure": False, "email_on_retry": False, "retries": 1}
 
 dag = DAG(
     dag_id="blogs_batch_load",
     start_date=datetime.datetime(2024, 2, 6),
     schedule=None,
-    default_args={"email_on_failure": False, "email_on_retry": False, "retries": 1},
+    default_args=default_args,
 )
 
 files = ["blogs.csv", "comments.csv", "favorites.csv", "opinions.csv", "blog_tags.csv", "tags.csv", "users.csv"]

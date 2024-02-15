@@ -12,8 +12,10 @@ else:
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--job", type=str, required=True)
+parser.add_argument("--src", type=str, required=True)
+parser.add_argument("--dest", type=str, required=True)
 args = parser.parse_args()
 
 sc = pyspark.SparkContext(appName=args.job)
 job_module = importlib.import_module(f"jobs.batch.load_{args.job}")
-job_module.execute(sc)
+job_module.execute(sc, args.src, args.dest)
