@@ -5,8 +5,8 @@ x-airflow-common:
     context: .
     dockerfile: Dockerfile
   env_file: &airflow-common-env
-    - ./docker/envs/airflow-common.env
-    - ./docker/envs/airflow-connections.env
+    - ./docker/airflow/envs/airflow-common.env
+    - ./docker/airflow/envs/airflow-connections.env
   volumes:
     - ${AIRFLOW_PROJ_DIR:-.}/blog_airflow/dags:/opt/airflow/dags
     - ${AIRFLOW_PROJ_DIR:-.}/blog_airflow/logs:/opt/airflow/logs
@@ -102,7 +102,7 @@ services:
       DUMB_INIT_SETSID: "0"
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}/blog_airflow/dags:/opt/airflow/dags
-      - ./docker/ssh/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key
+      - ./docker/sftp/ssh/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key
       - ./docker/nfs/shared:/home/airflow/shared
     restart: always
     depends_on:
@@ -139,7 +139,7 @@ services:
     user: "0:0"
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}/blog_airflow:/sources
-      - ./docker/scripts/airflow_init.sh:/airflow_init.sh
+      - ./docker/airflow/scripts/airflow_init.sh:/airflow_init.sh
 
   airflow-cli:
     <<: *airflow-common
@@ -181,9 +181,9 @@ services:
     ports:
       - 5432:5432
     env_file:
-      - ./docker/envs/datawarehouse.env
+      - ./docker/postgres/envs/datawarehouse.env
     volumes:
-      - ./docker/scripts/postgres_init.sql:/docker-entrypoint-initdb.d/postgres_init.sql
+      - ./docker/postgres/scripts/postgres_init.sql:/docker-entrypoint-initdb.d/postgres_init.sql
       - datawarehouse-db-volume:/var/lib/postgresql/data
       - ./docker/nfs/shared:/shared
     healthcheck:
@@ -196,7 +196,7 @@ services:
     image: atmoz/sftp:debian
     volumes:
       - ./sample_data:/home/blog_user/upload
-      - ./docker/ssh/ssh_host_rsa_key.pub:/home/blog_user/.ssh/keys/ssh_host_rsa_key.pub
+      - ./docker/sftp/ssh/ssh_host_rsa_key.pub:/home/blog_user/.ssh/keys/ssh_host_rsa_key.pub
     ports:
       - "2222:22"
     command: blog_user:password:1001
@@ -204,7 +204,7 @@ services:
   spark-main:
     image: bitnami/spark:3.5.0
     env_file:
-      - ./docker/envs/spark-primary.env
+      - ./docker/spark/envs/spark-primary.env
     ports:
       - '8180:8080'
       - '7077:7077'
@@ -212,7 +212,7 @@ services:
   spark-worker:
     image: bitnami/spark:3.5.0
     env_file:
-      - ./docker/envs/spark-secondary.env
+      - ./docker/spark/envs/spark-secondary.env
     ports:
       - '8181:8081'
 
