@@ -195,7 +195,7 @@ services:
   sftp-server:
     image: atmoz/sftp:debian
     volumes:
-      - ./sample_data:/home/blog_user/upload
+      - ./data:/home/blog_user/upload
       - ./docker/sftp/ssh/ssh_host_rsa_key.pub:/home/blog_user/.ssh/keys/ssh_host_rsa_key.pub
     ports:
       - "2222:22"

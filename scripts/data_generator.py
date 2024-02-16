@@ -169,7 +169,7 @@ def write_to_csv(file_name: str, headers: List[str], data: List[List[str]]):
     :param data: data to write to CSV
     :type data: List[List[str]]
     """
-    with open(f"sample_data/{file_name}", "w", encoding="UTF8", newline="") as f:
+    with open(f"data/{file_name}", "w", encoding="UTF8", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(headers)
         writer.writerows(data)
