@@ -1,10 +1,10 @@
 import datetime
 from datetime import timedelta
+from pathlib import Path
 
 from airflow import DAG
 from airflow.models.baseoperator import chain
-
-# from airflow.providers.apache.spark.operators.spark_jdbc import SparkJDBCOperator
+from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.providers.sftp.operators.sftp import SFTPOperator
 
@@ -31,7 +31,7 @@ for file_name in files:
         remote_filepath=f"/upload/{file_name}",
     )
 
-    load_stage_tables = PostgresOperator(
+    load_stage_table = PostgresOperator(
         task_id=f"load_{name}_stage_table",
         dag=dag,
         postgres_conn_id="DATAWAREHOUSE",
@@ -42,4 +42,31 @@ for file_name in files:
         },
     )
 
-    chain(extract_sftp, load_stage_tables)
+    if name == "tags":
+        spark_job_params = {
+            "num_executors": 1,
+            "executor_cores": 1,
+            "executor_memory": "1g",
+            "total_executor_cores": 1,
+            "driver_memory": "1g",
+        }
+        load_gold_table = SparkSubmitOperator(
+            task_id=f"load_{name}_gold_table",
+            conn_id="SPARK",
+            application=f"{str(Path(__file__).parent)}/spark/dist/main.py",
+            py_files=f"{str(Path(__file__).parent)}/spark/dist/jobs.zip",
+            num_executors=spark_job_params["num_executors"],
+            executor_cores=spark_job_params["executor_cores"],
+            executor_memory=spark_job_params["executor_memory"],
+            total_executor_cores=spark_job_params["total_executor_cores"],
+            driver_memory=spark_job_params["driver_memory"],
+            application_args=[
+                "--job",
+                f"load_{name}",
+                "--jobtype",
+                "batch",
+            ],
+        )
+        chain(extract_sftp, load_stage_table, load_gold_table)
+    else:
+        chain(extract_sftp, load_stage_table)

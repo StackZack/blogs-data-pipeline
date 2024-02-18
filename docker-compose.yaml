@@ -6,12 +6,12 @@ x-airflow-common:
     dockerfile: Dockerfile
   env_file: &airflow-common-env
     - ./docker/airflow/envs/airflow-common.env
-    - ./docker/airflow/envs/airflow-connections.env
   volumes:
     - ${AIRFLOW_PROJ_DIR:-.}/blog_airflow/dags:/opt/airflow/dags
     - ${AIRFLOW_PROJ_DIR:-.}/blog_airflow/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/blog_airflow/config:/opt/airflow/config
     - ${AIRFLOW_PROJ_DIR:-.}/blog_airflow/plugins:/opt/airflow/plugins
+    - ${AIRFLOW_PROJ_DIR:-.}/docker/airflow/secrets_backend/connections.yml:/data/connections.yml
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -102,6 +102,7 @@ services:
       DUMB_INIT_SETSID: "0"
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}/blog_airflow/dags:/opt/airflow/dags
+      - ${AIRFLOW_PROJ_DIR:-.}/docker/airflow/secrets_backend/connections.yml:/data/connections.yml
       - ./docker/sftp/ssh/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key
       - ./docker/nfs/shared:/home/airflow/shared
     restart: always
@@ -205,6 +206,8 @@ services:
     image: bitnami/spark:3.5.0
     env_file:
       - ./docker/spark/envs/spark-primary.env
+    volumes:
+      - ./docker/spark/drivers:/opt/bitnami/spark/jars/drivers
     ports:
       - '8180:8080'
       - '7077:7077'
