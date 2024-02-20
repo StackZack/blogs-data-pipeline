@@ -20,7 +20,7 @@ def execute() -> None:
     df = select_for_gold_insert(df)
 
     # Insert df into target table
-    pass
+    session_helper.write_df_to_table(df, "gold.tag_lookup")
 
 
 def apply_source_schema(df: DataFrame, spark: SparkSession) -> DataFrame:
@@ -34,7 +34,15 @@ def apply_source_schema(df: DataFrame, spark: SparkSession) -> DataFrame:
     :return: Stage table with expected schema applied
     :rtype: DataFrame
     """
-    return spark.createDataFrame(df.rdd, staging_tags)
+    return spark.createDataFrame(
+        df.selectExpr(
+            "CAST(tag_id AS INT) AS tag_id",
+            "CAST(name AS STRING) AS name",
+            "CAST(created_at AS TIMESTAMP) AS created_at",
+            "CAST(updated_at AS TIMESTAMP) AS updated_at",
+        ).collect(),
+        staging_tags,
+    )
 
 
 def select_for_gold_insert(df: DataFrame) -> DataFrame:
@@ -46,4 +54,4 @@ def select_for_gold_insert(df: DataFrame) -> DataFrame:
     :return: Selection for gold insert
     :rtype: DataFrame
     """
-    pass
+    return df.select("tag_id", "name")

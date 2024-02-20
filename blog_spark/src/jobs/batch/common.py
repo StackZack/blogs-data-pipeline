@@ -34,3 +34,21 @@ class BatchSessionHelper:
             .option("dbtable", dbtable)
             .load()
         )
+
+    def write_df_to_table(self, df: DataFrame, dbtable: str) -> None:
+        """
+        Writes dataframe to table
+
+        :param df: Data to insert into the table
+        :type df: DataFrame
+        :param dbtable: table to insert into
+        :type dbtable: str
+        """
+        (
+            df.write.format("jdbc")
+            .option("url", "jdbc:postgresql://datawarehouse/dw-blogs")
+            .option("user", "user")
+            .option("password", "password")
+            .option("dbtable", dbtable)
+            .save()
+        )

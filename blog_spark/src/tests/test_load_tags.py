@@ -1,6 +1,7 @@
 """Tests for load_tags"""
-from jobs.batch.load_tags import apply_source_schema
+from jobs.batch.load_tags import apply_source_schema, select_for_gold_insert
 from pyspark.sql.types import IntegerType, StringType, TimestampType
+from pyspark.testing import assertDataFrameEqual, assertSchemaEqual
 
 
 def test_apply_schema(spark):
@@ -11,3 +12,13 @@ def test_apply_schema(spark):
     assert actual_df.schema.fields[1].dataType == StringType()
     assert actual_df.schema.fields[2].dataType == TimestampType()
     assert actual_df.schema.fields[3].dataType == TimestampType()
+
+
+def test_gold_insert_select(spark):
+    """Asserts that schema for gold insert selection"""
+    df = spark.read.option("header", True).csv("./data/tags.csv")
+    df = apply_source_schema(df, spark)
+    expected_df = df.select("tag_id", "name")
+    actual_df = select_for_gold_insert(df)
+    assertSchemaEqual(actual_df.schema, expected_df.schema)
+    assertDataFrameEqual(actual_df, expected_df)
