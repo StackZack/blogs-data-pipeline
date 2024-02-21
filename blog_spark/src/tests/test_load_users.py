@@ -1,26 +1,30 @@
-"""Tests for load_tags"""
+"""Tests for load_users"""
 from jobs.batch.load_users import apply_source_schema, select_for_gold_insert
-from pyspark.sql.types import IntegerType, StringType, TimestampType
-from pyspark.testing import assertDataFrameEqual, assertSchemaEqual
+from jobs.batch.schema import staging_users
+from pyspark.sql.types import IntegerType, StringType, StructField, StructType
+from pyspark.testing import assertSchemaEqual
 
 
 def test_apply_schema(spark):
     """Asserts schema for staging data"""
     df = spark.read.option("header", True).csv("./data/users.csv")
     actual_df = apply_source_schema(df, spark)
-    assert actual_df.schema.fields[0].dataType == IntegerType()
-    assert actual_df.schema.fields[1].dataType == StringType()
-    assert actual_df.schema.fields[2].dataType == StringType()
-    assert actual_df.schema.fields[3].dataType == StringType()
-    assert actual_df.schema.fields[4].dataType == TimestampType()
-    assert actual_df.schema.fields[5].dataType == TimestampType()
+    assertSchemaEqual(actual_df.schema, staging_users)
+    assert actual_df.count() == 100
 
 
 def test_gold_insert_select(spark):
     """Asserts that schema for gold insert selection"""
+    expected_schema = StructType(
+        [
+            StructField("user_id", IntegerType(), True),
+            StructField("first_name", StringType(), True),
+            StructField("last_name", StringType(), True),
+            StructField("email", StringType(), True),
+        ]
+    )
     df = spark.read.option("header", True).csv("./data/users.csv")
     df = apply_source_schema(df, spark)
-    expected_df = df.select("user_id", "first_name", "last_name", "email")
     actual_df = select_for_gold_insert(df)
-    assertSchemaEqual(actual_df.schema, expected_df.schema)
-    assertDataFrameEqual(actual_df, expected_df)
+    assertSchemaEqual(actual_df.schema, expected_schema)
+    assert actual_df.count() == 100

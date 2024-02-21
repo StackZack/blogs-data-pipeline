@@ -72,3 +72,13 @@ staging_blogs = StructType(
         StructField("updated_at", TimestampType(), True),
     ]
 )
+
+gold_blog_activity = StructType(
+    [
+        StructField("blog_id", IntegerType(), True),
+        StructField("user_id", IntegerType(), True),
+        StructField("comment_id", IntegerType(), True),
+        StructField("favorite_id", IntegerType(), True),
+        StructField("opinion_id", IntegerType(), True),
+    ]
+)
