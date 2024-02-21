@@ -42,7 +42,7 @@ for file_name in files:
         },
     )
 
-    if name == "tags":
+    if name not in ["blog_tags", "blogs"]:
         spark_job_params = {
             "num_executors": 1,
             "executor_cores": 1,
