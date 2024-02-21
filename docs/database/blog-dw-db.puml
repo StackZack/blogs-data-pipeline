@@ -10,7 +10,6 @@ entity "blog_activity" as blog_activity {
   *comment_id : INT <<FK>>
   *favorite_id : INT <<FK>>
   *opinion_id : INT <<FK>>
-  *tag_id : INT <<FK>>
 }
 
 entity "blogs" as blogs {
