@@ -55,6 +55,7 @@ for file_name in files:
             conn_id="SPARK",
             application=f"{str(Path(__file__).parent)}/spark/dist/main.py",
             py_files=f"{str(Path(__file__).parent)}/spark/dist/jobs.zip",
+            jars=f"{str(Path(__file__).parent)}/jars/drivers/postgresql-42.7.1.jar",
             num_executors=spark_job_params["num_executors"],
             executor_cores=spark_job_params["executor_cores"],
             executor_memory=spark_job_params["executor_memory"],

@@ -12,9 +12,7 @@ class BatchSessionHelper:
         :param app_name: Name of app for spark job
         :type app_name: str
         """
-        conf = (
-            SparkConf().setAppName(app_name).set("spark.jars", "/opt/bitnami/spark/jars/drivers/postgresql-42.7.1.jar")
-        )
+        conf = SparkConf().setAppName(app_name)
         self.spark = SparkSession.builder.config(conf=conf).getOrCreate()
 
     def read_table_to_df(self, dbtable: str) -> DataFrame:
@@ -28,6 +26,7 @@ class BatchSessionHelper:
         """
         return (
             self.spark.read.format("jdbc")
+            .option("driver", "org.postgresql.Driver")
             .option("url", "jdbc:postgresql://datawarehouse/dw-blogs")
             .option("user", "user")
             .option("password", "password")
@@ -45,7 +44,11 @@ class BatchSessionHelper:
         :type dbtable: str
         """
         (
-            df.write.format("jdbc")
+            df.write.format(
+                "jdbc",
+            )
+            .mode("append")
+            .option("driver", "org.postgresql.Driver")
             .option("url", "jdbc:postgresql://datawarehouse/dw-blogs")
             .option("user", "user")
             .option("password", "password")

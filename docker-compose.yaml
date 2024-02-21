@@ -206,8 +206,6 @@ services:
     image: bitnami/spark:3.5.0
     env_file:
       - ./docker/spark/envs/spark-primary.env
-    volumes:
-      - ./docker/spark/drivers:/opt/bitnami/spark/jars/drivers
     ports:
       - '8180:8080'
       - '7077:7077'
@@ -217,7 +215,7 @@ services:
     env_file:
       - ./docker/spark/envs/spark-secondary.env
     ports:
-      - '8181:8081'
+      - '8081:8081'
 
 volumes:
   postgres-db-volume:

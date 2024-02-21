@@ -1,4 +1,4 @@
 build:
-	mkdir ./blog_airflow/dags/spark/dist
-	cp ./blog_airflow/dags/spark/src/main.py ./blog_airflow/dags/spark/dist
-	cd ./blog_airflow/dags/spark/src && zip -x main.py -r ../dist/jobs.zip .
+	mkdir -p ./blog_spark/dist
+	cp ./blog_spark/src/main.py ./blog_spark/dist
+	cd ./blog_spark/src && zip -x main.py -r ../dist/jobs.zip .
