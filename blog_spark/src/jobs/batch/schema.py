@@ -73,12 +73,9 @@ staging_blogs = StructType(
     ]
 )
 
-gold_blog_activity = StructType(
+staging_blog_tags = StructType(
     [
         StructField("blog_id", IntegerType(), True),
-        StructField("user_id", IntegerType(), True),
-        StructField("comment_id", IntegerType(), True),
-        StructField("favorite_id", IntegerType(), True),
-        StructField("opinion_id", IntegerType(), True),
+        StructField("tag_id", IntegerType(), True),
     ]
 )

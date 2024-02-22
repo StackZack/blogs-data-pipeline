@@ -206,6 +206,8 @@ services:
     image: bitnami/spark:3.5.0
     env_file:
       - ./docker/spark/envs/spark-primary.env
+    volumes:
+      - ./docker/nfs/shared:/shared/data
     ports:
       - '8180:8080'
       - '7077:7077'
@@ -214,6 +216,8 @@ services:
     image: bitnami/spark:3.5.0
     env_file:
       - ./docker/spark/envs/spark-secondary.env
+    volumes:
+      - ./docker/nfs/shared:/shared/data
     ports:
       - '8081:8081'
 

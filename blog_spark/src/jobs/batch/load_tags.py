@@ -1,4 +1,4 @@
-"""Job for loading gold.tag_lookup"""
+"""Job for loading staging.stg_tags"""
 from jobs.batch.common import BatchSessionHelper
 from jobs.batch.schema import staging_tags
 from pyspark.sql import SparkSession
@@ -11,16 +11,13 @@ def execute() -> None:
     session_helper = BatchSessionHelper("load_tags")
 
     # Select from source table
-    df = session_helper.read_table_to_df("staging.stg_tags")
+    df = session_helper.read_csv_to_df("/shared/data/tags.csv")
 
     # Apply schema to df selection
     df = apply_source_schema(df, session_helper.spark)
 
-    # Modify selection for insert
-    df = select_for_gold_insert(df)
-
     # Insert df into target table
-    session_helper.write_df_to_table(df, "gold.tag_lookup")
+    session_helper.write_df_to_table(df, "staging.stg_tags")
 
 
 def apply_source_schema(df: DataFrame, spark: SparkSession) -> DataFrame:
@@ -43,15 +40,3 @@ def apply_source_schema(df: DataFrame, spark: SparkSession) -> DataFrame:
         ).collect(),
         staging_tags,
     )
-
-
-def select_for_gold_insert(df: DataFrame) -> DataFrame:
-    """
-    Selects necessary columns for gold insert
-
-    :param df: Stage table data with schema applied
-    :type df: DataFrame
-    :return: Selection for gold insert
-    :rtype: DataFrame
-    """
-    return df.select("tag_id", "name")

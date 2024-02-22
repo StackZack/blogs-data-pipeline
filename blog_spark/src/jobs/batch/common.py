@@ -15,6 +15,17 @@ class BatchSessionHelper:
         conf = SparkConf().setAppName(app_name)
         self.spark = SparkSession.builder.config(conf=conf).getOrCreate()
 
+    def read_csv_to_df(self, path: str, header_present: bool = True) -> DataFrame:
+        """
+        Selects csv data to a dataframe
+
+        :param path: Absolute path to CSV file
+        :type path: str
+        :return: Table data
+        :rtype: DataFrame
+        """
+        return self.spark.read.option("header", header_present).csv(path)
+
     def read_table_to_df(self, dbtable: str) -> DataFrame:
         """
         Selects table from postgres datawarehouse to a dataframe

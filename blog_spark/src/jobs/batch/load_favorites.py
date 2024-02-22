@@ -1,9 +1,8 @@
-"""Job for loading gold.favorites"""
+"""Job for loading staging.stg_favorites"""
 from jobs.batch.common import BatchSessionHelper
-from jobs.batch.schema import gold_blog_activity, staging_favorites
+from jobs.batch.schema import staging_favorites
 from pyspark.sql import SparkSession
 from pyspark.sql.dataframe import DataFrame
-from pyspark.sql.functions import lit
 
 
 def execute() -> None:
@@ -11,19 +10,14 @@ def execute() -> None:
     # Instantiate session
     session_helper = BatchSessionHelper("load_favorites")
 
-    # Select from source table
-    df = session_helper.read_table_to_df("staging.stg_favorites")
+    # Select from source file
+    df = session_helper.read_csv_to_df("/shared/data/favorites.csv")
 
     # Apply schema to df selection
     df = apply_source_schema(df, session_helper.spark)
 
-    # Modify selection for insert
-    gold_df = select_for_gold_insert(df)
-    activity_df = select_for_activity_insert(df, session_helper.spark)
-
     # Insert df into target table
-    session_helper.write_df_to_table(gold_df, "gold.favorites")
-    session_helper.write_df_to_table(activity_df, "gold.blog_activity")
+    session_helper.write_df_to_table(df, "staging.stg_favorites")
 
 
 def apply_source_schema(df: DataFrame, spark: SparkSession) -> DataFrame:
@@ -47,37 +41,4 @@ def apply_source_schema(df: DataFrame, spark: SparkSession) -> DataFrame:
             "CAST(updated_at AS TIMESTAMP) AS updated_at",
         ).collect(),
         staging_favorites,
-    )
-
-
-def select_for_gold_insert(df: DataFrame) -> DataFrame:
-    """
-    Selects necessary columns for gold insert
-
-    :param df: Stage table data with schema applied
-    :type df: DataFrame
-    :return: Selection for gold insert
-    :rtype: DataFrame
-    """
-    return df.select("favorite_id", "favorite_date")
-
-
-def select_for_activity_insert(df: DataFrame, spark: SparkSession) -> DataFrame:
-    """
-    Selects necessary columns for blog activity insert
-
-    :param df: Stage table data with schema applied
-    :type df: DataFrame
-    :return: Selection for blog activity insert
-    :rtype: DataFrame
-    """
-    return spark.createDataFrame(
-        df.select(
-            "blog_id",
-            "user_id",
-            lit(None).alias("comment_id"),
-            "favorite_id",
-            lit(None).alias("opinion_id"),
-        ).collect(),
-        gold_blog_activity,
     )
