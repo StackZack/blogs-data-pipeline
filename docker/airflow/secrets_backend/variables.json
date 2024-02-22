@@ -1,0 +1,30 @@
+{
+    "blogs_batch_load_params": {
+        "default_args": {
+            "email_on_failure": "False",
+            "email_on_retry": "False",
+            "retries": 1
+        },
+        "files": [
+            "blogs.csv",
+            "comments.csv",
+            "favorites.csv",
+            "opinions.csv",
+            "blog_tags.csv",
+            "tags.csv",
+            "users.csv"
+        ],
+        "spark_job_params": {
+            "num_executors": 1,
+            "executor_cores": 1,
+            "executor_memory": "512M",
+            "total_executor_cores": 1,
+            "driver_memory": "512M"
+        },
+        "spark_file_path": "/opt/airflow/spark/dist",
+        "spark_drivers_path": "/opt/airflow/dags/jars/drivers",
+        "ssh_conn_id": "INBOUND_SFTP",
+        "spark_conn_id": "SPARK",
+        "postgres_conn_id": "DATAWAREHOUSE"
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "DATAWAREHOUSE": {
+        "conn_type": "postgres",
+        "host": "datawarehouse",
+        "schema": "dw-blogs",
+        "login": "user",
+        "password": "password",
+        "port": "5432"
+    },
+    "INBOUND_SFTP": {
+        "conn_type": "sftp",
+        "host": "sftp-server",
+        "schema": "postgres",
+        "login": "blog_user",
+        "password": "password",
+        "port": "22",
+        "extra_dejson": {
+            "key_file": "/etc/ssh/ssh_host_rsa_key"
+        }
+    },
+    "SPARK": {
+        "conn_type": "spark",
+        "host": "spark://spark-main",
+        "port": "7077"
+    }
+}

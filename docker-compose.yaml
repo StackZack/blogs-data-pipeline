@@ -13,7 +13,7 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/blog_airflow/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/blog_airflow/config:/opt/airflow/config
     - ${AIRFLOW_PROJ_DIR:-.}/blog_airflow/plugins:/opt/airflow/plugins
-    - ${AIRFLOW_PROJ_DIR:-.}/docker/airflow/secrets_backend/connections.yml:/data/connections.yml
+    - ${AIRFLOW_PROJ_DIR:-.}/docker/airflow/secrets_backend:/data
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -104,7 +104,7 @@ services:
       DUMB_INIT_SETSID: "0"
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}/blog_airflow/dags:/opt/airflow/dags
-      - ${AIRFLOW_PROJ_DIR:-.}/docker/airflow/secrets_backend/connections.yml:/data/connections.yml
+      - ${AIRFLOW_PROJ_DIR:-.}/docker/airflow/secrets_backend:/data
       - ./docker/sftp/ssh/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key
       - ./docker/nfs/shared:/shared/data
     restart: always
