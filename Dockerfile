@@ -14,6 +14,7 @@ FROM apache/airflow:2.8.1-python3.11
 
 # Install dependencies needed for spark
 USER root
+
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
          openjdk-17-jre-headless \
@@ -21,8 +22,10 @@ RUN apt-get update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 USER airflow
-# TODO: Make dockerfile arch independent
-ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-arm64
+
+ARG TARGETARCH
+
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-$TARGETARCH
 
 # Copy build artifacts
 COPY --from=builder /blog_spark/dist /opt/airflow/spark/dist

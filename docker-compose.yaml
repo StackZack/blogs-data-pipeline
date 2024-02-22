@@ -4,6 +4,8 @@ x-airflow-common:
   build:
     context: .
     dockerfile: Dockerfile
+    args:
+      TARGETARCH: arm64
   env_file: &airflow-common-env
     - ./docker/airflow/envs/airflow-common.env
   volumes:

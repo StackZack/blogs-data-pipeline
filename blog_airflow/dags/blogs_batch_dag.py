@@ -110,7 +110,6 @@ load_opinions = PostgresOperator(
     params={"stage_schema": "staging", "gold_schema": "gold"},
 )
 
-
 chain(
     sftp_extract_tasks,
     load_stage_tables,
