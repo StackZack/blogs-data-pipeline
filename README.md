@@ -14,14 +14,3 @@ Within a virtual environment run the below commands.
 pip install -r requirements-dev.txt
 pre-commit install
 ```
-
-load_stage_table = PostgresOperator(
-    task_id=f"load_{name}_stage_table",
-    dag=dag,
-    postgres_conn_id="DATAWAREHOUSE",
-    sql="./sql/stage_load.sql",
-    params={
-        "table_name": f"staging.stg_{name}",
-        "csv_file_path": f"/shared/{file_name}",
-    },
-)

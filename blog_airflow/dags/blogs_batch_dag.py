@@ -4,9 +4,9 @@ from pathlib import Path
 
 from airflow import DAG
 from airflow.models.baseoperator import chain
+from airflow.operators.empty import EmptyOperator
 from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
-
-# from airflow.providers.postgres.operators.postgres import PostgresOperator
+from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.providers.sftp.operators.sftp import SFTPOperator
 
 default_args = {"retry_delay": timedelta(minutes=5), "email_on_failure": False, "email_on_retry": False, "retries": 1}
@@ -43,7 +43,7 @@ for file_name in files:
     sftp_extract_tasks.append(extract_sftp)
 
 load_stage_tables = SparkSubmitOperator(
-    task_id="load_blog_stage_tables",
+    task_id="load_stage_tables",
     conn_id="SPARK",
     application=f"{str(Path(__file__).parent)}/spark/dist/main.py",
     py_files=f"{str(Path(__file__).parent)}/spark/dist/jobs.zip",
@@ -61,4 +61,62 @@ load_stage_tables = SparkSubmitOperator(
     ],
 )
 
-chain(sftp_extract_tasks, load_stage_tables)
+load_users = PostgresOperator(
+    task_id="load_users",
+    dag=dag,
+    postgres_conn_id="DATAWAREHOUSE",
+    sql="./sql/gold_users.sql",
+    params={"stage_schema": "staging", "gold_schema": "gold"},
+)
+
+load_blogs = PostgresOperator(
+    task_id="load_blogs",
+    dag=dag,
+    postgres_conn_id="DATAWAREHOUSE",
+    sql="./sql/gold_blogs.sql",
+    params={"stage_schema": "staging", "gold_schema": "gold"},
+)
+
+load_tag_lookup = PostgresOperator(
+    task_id="load_tag_lookup",
+    dag=dag,
+    postgres_conn_id="DATAWAREHOUSE",
+    sql="./sql/gold_tag_lookup.sql",
+    params={"stage_schema": "staging", "gold_schema": "gold"},
+)
+
+join_pre_req_tables = EmptyOperator(task_id="join_pre_req_tables", dag=dag)
+
+load_comments = PostgresOperator(
+    task_id="load_comments",
+    dag=dag,
+    postgres_conn_id="DATAWAREHOUSE",
+    sql="./sql/gold_comments.sql",
+    params={"stage_schema": "staging", "gold_schema": "gold"},
+)
+
+load_favorites = PostgresOperator(
+    task_id="load_favorites",
+    dag=dag,
+    postgres_conn_id="DATAWAREHOUSE",
+    sql="./sql/gold_favorites.sql",
+    params={"stage_schema": "staging", "gold_schema": "gold"},
+)
+
+load_opinions = PostgresOperator(
+    task_id="load_opinions",
+    dag=dag,
+    postgres_conn_id="DATAWAREHOUSE",
+    sql="./sql/gold_opinions.sql",
+    params={"stage_schema": "staging", "gold_schema": "gold"},
+)
+
+
+chain(
+    sftp_extract_tasks,
+    load_stage_tables,
+    load_users,
+    [load_blogs, load_tag_lookup],
+    join_pre_req_tables,
+    [load_comments, load_favorites, load_opinions],
+)

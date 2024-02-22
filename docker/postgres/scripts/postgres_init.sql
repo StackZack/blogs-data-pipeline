@@ -95,7 +95,7 @@ CREATE TABLE gold.opinions (
 );
 
 CREATE TABLE gold.blog_activity (
-    blog_activity_id SERIAL PRIMARY KEY,
+    blog_activity_id SERIAL,
     blog_id INT,
     user_id INT,
     comment_id INT,
