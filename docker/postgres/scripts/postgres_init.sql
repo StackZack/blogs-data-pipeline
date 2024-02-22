@@ -3,60 +3,60 @@ CREATE SCHEMA gold;
 
 -- STAGE TABLE CREATION
 CREATE TABLE staging.stg_users (
-    user_id TEXT,
-    first_name TEXT,
-    last_name TEXT,
-    email TEXT,
-    created_at TEXT,
-    updated_at TEXT
+    user_id INT,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    email VARCHAR(150),
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
 );
 
 CREATE TABLE staging.stg_comments (
-    comment_id TEXT,
-    blog_id TEXT,
-    user_id TEXT,
+    comment_id INT,
+    blog_id INT,
+    user_id INT,
     content TEXT,
-    created_at TEXT,
-    updated_at TEXT
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
 );
 
 CREATE TABLE staging.stg_blog_tags (
-    tag_id TEXT,
-    blog_id TEXT
+    tag_id INT,
+    blog_id INT
 );
 
 CREATE TABLE staging.stg_tags (
-    tag_id TEXT,
-    name TEXT,
-    created_at TEXT,
-    updated_at TEXT
+    tag_id INT,
+    name VARCHAR(50),
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
 );
 
 CREATE TABLE staging.stg_blogs (
-    blog_id TEXT,
-    user_id TEXT,
-    title TEXT,
+    blog_id INT,
+    user_id INT,
+    title VARCHAR(150),
     content TEXT,
-    created_at TEXT,
-    updated_at TEXT
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
 );
 
 CREATE TABLE staging.stg_favorites (
-    favorite_id TEXT,
-    blog_id TEXT,
-    user_id TEXT,
-    favorite_date TEXT,
-    created_at TEXT,
-    updated_at TEXT
+    favorite_id INT,
+    blog_id INT,
+    user_id INT,
+    favorite_date DATE,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
 );
 
 CREATE TABLE staging.stg_opinions (
-    opinion_id TEXT,
-    blog_id TEXT,
-    user_id TEXT,
+    opinion_id INT,
+    blog_id INT,
+    user_id INT,
     opinion TEXT,
-    created_at TEXT,
-    updated_at TEXT
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
 );
 
 -- GOLD TABLE CREATION

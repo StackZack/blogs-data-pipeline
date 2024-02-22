@@ -1,6 +1,5 @@
 """Schemas for pyspark jobs"""
 from pyspark.sql.types import (
-    BooleanType,
     DateType,
     IntegerType,
     StringType,
@@ -23,7 +22,7 @@ staging_opinions = StructType(
         StructField("opinion_id", IntegerType(), True),
         StructField("blog_id", IntegerType(), True),
         StructField("user_id", IntegerType(), True),
-        StructField("opinion", BooleanType(), True),
+        StructField("opinion", StringType(), True),
         StructField("created_at", TimestampType(), True),
         StructField("updated_at", TimestampType(), True),
     ]
