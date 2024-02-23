@@ -5,7 +5,7 @@ from airflow.models import Variable
 from airflow.models.baseoperator import chain
 from airflow.operators.empty import EmptyOperator
 from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
-from airflow.providers.postgres.operators.postgres import PostgresOperator
+from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from airflow.providers.sftp.operators.sftp import SFTPOperator
 
 dag_params = Variable.get("blogs_batch_load_params")
@@ -50,52 +50,52 @@ load_stage_tables = SparkSubmitOperator(
     ],
 )
 
-load_users = PostgresOperator(
+load_users = SQLExecuteQueryOperator(
     task_id="load_users",
     dag=dag,
-    postgres_conn_id=dag_params["postgres_conn_id"],
+    conn_id=dag_params["postgres_conn_id"],
     sql="./sql/gold_users.sql",
     params={"stage_schema": "staging", "gold_schema": "gold"},
 )
 
-load_blogs = PostgresOperator(
+load_blogs = SQLExecuteQueryOperator(
     task_id="load_blogs",
     dag=dag,
-    postgres_conn_id=dag_params["postgres_conn_id"],
+    conn_id=dag_params["postgres_conn_id"],
     sql="./sql/gold_blogs.sql",
     params={"stage_schema": "staging", "gold_schema": "gold"},
 )
 
-load_tag_lookup = PostgresOperator(
+load_tag_lookup = SQLExecuteQueryOperator(
     task_id="load_tag_lookup",
     dag=dag,
-    postgres_conn_id=dag_params["postgres_conn_id"],
+    conn_id=dag_params["postgres_conn_id"],
     sql="./sql/gold_tag_lookup.sql",
     params={"stage_schema": "staging", "gold_schema": "gold"},
 )
 
 join_pre_req_tables = EmptyOperator(task_id="join_pre_req_tables", dag=dag)
 
-load_comments = PostgresOperator(
+load_comments = SQLExecuteQueryOperator(
     task_id="load_comments",
     dag=dag,
-    postgres_conn_id=dag_params["postgres_conn_id"],
+    conn_id=dag_params["postgres_conn_id"],
     sql="./sql/gold_comments.sql",
     params={"stage_schema": "staging", "gold_schema": "gold"},
 )
 
-load_favorites = PostgresOperator(
+load_favorites = SQLExecuteQueryOperator(
     task_id="load_favorites",
     dag=dag,
-    postgres_conn_id=dag_params["postgres_conn_id"],
+    conn_id=dag_params["postgres_conn_id"],
     sql="./sql/gold_favorites.sql",
     params={"stage_schema": "staging", "gold_schema": "gold"},
 )
 
-load_opinions = PostgresOperator(
+load_opinions = SQLExecuteQueryOperator(
     task_id="load_opinions",
     dag=dag,
-    postgres_conn_id=dag_params["postgres_conn_id"],
+    conn_id=dag_params["postgres_conn_id"],
     sql="./sql/gold_opinions.sql",
     params={"stage_schema": "staging", "gold_schema": "gold"},
 )
