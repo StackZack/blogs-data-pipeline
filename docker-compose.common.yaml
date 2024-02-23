@@ -2,6 +2,7 @@ version: "3.8"
 services:
   datawarehouse:
     image: postgres:16.1
+    container_name: datawarehouse
     ports:
       - 5432:5432
     env_file:
@@ -16,8 +17,29 @@ services:
       retries: 5
     restart: always
 
+  dashboard:
+    image: metabase/metabase:v0.48.7
+    container_name: dashboard
+    ports:
+      - 3000:3000
+    environment:
+      MB_DB_TYPE: h2
+      MB_DB_FILE: /metabase/metabase.db
+      MB_DB_AUTOCREATE_TABLES: "true"
+      MB_DB_PERSISTENT_TABLES: "true"
+    volumes:
+      - ./docker/metabase:/metabase
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "-I", "http://localhost:3000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      - datawarehouse
+
   sftp-server:
     image: atmoz/sftp:debian
+    container_name: sftp-server
     volumes:
       - ./data:/home/blog_user/upload
       - ./docker/sftp/ssh/ssh_host_rsa_key.pub:/home/blog_user/.ssh/keys/ssh_host_rsa_key.pub
@@ -27,6 +49,7 @@ services:
 
   spark-main:
     image: bitnami/spark:3.5.0
+    container_name: spark-main
     env_file:
       - ./docker/spark/envs/spark-primary.env
     volumes:
@@ -37,6 +60,7 @@ services:
 
   spark-worker:
     image: bitnami/spark:3.5.0
+    container_name: spark-worker
     env_file:
       - ./docker/spark/envs/spark-secondary.env
     volumes:

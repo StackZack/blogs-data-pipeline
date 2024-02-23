@@ -4,22 +4,22 @@
 
 ### General
 
-This repo is a proof of concept that shows how to orchestrate the ingestion of batch data using Airflow for an **[ELT](https://en.wikipedia.org/wiki/Extract,_load,_transform)** (_Extract, Load, Transform_) approach.
+This repo is a proof of concept that shows how to orchestrate the ingestion of batch data using Airflow for an **[ELT](https://en.wikipedia.org/wiki/Extract,_load,_transform)** (_Extract, Load, Transform_) approach. The data is then made available to view via a dashboard.
 
 The ingestion of data from source to the datawarehouse follows the below steps:
 
-1. Files are placed on an SFTP server
-2. SFTP files are extracted to a local file system location
-3. Files are ingested into Postgres staging tables using **Apache Spark**
+1. Files are placed on an SFTP server.
+2. SFTP files are extracted to a local file system location.
+3. Files are ingested into **PostgreSQL** staging tables using **Apache Spark**.
    1. Table ingestion is a full load (_truncate then insert_)
    2. Spark asserts the file schema when inserting
-4. SQL scripts are ran which perform **[CTEs](https://www.postgresql.org/docs/current/queries-with.html)** and **MERGE** / **INSERT** statements to load the user facing Postgres presentation (_gold_) tables
+4. SQL scripts are ran which perform **[CTEs](https://www.postgresql.org/docs/current/queries-with.html)** and **MERGE** / **INSERT** statements to load the user facing PostgreSQL presentation (_gold_) tables
 
 A diagram of this process can be seen below:
 
 ![Pipeline Overview](./docs/images/architecture/pipeline-overview.png)
 
-The below technologies are used for running the repo locally as well as within the pipeline process.
+### Technologies Used
 
 * [Apache Airflow](https://airflow.apache.org)
 * [Apache Spark](https://spark.apache.org)
@@ -27,6 +27,7 @@ The below technologies are used for running the repo locally as well as within t
 * [Make](https://www.gnu.org/software/make/)
 * [Docker](https://www.docker.com)
 * [Docker Compose](https://docs.docker.com/compose/)
+* [Metabase](https://www.metabase.com)
 
 ### Data Diagrams
 
@@ -50,7 +51,7 @@ The [Pipeline Execution](#pipeline-execution) section details how to navigate ai
 
 ### Docker Compose
 
-1. Build the custom dockerfile in the project by running the below command for your respective OS
+1. Build the custom dockerfile in the project by running the below command for your respective OS.
 
 ```bash
 # Linux / Mac OS Users
@@ -61,7 +62,7 @@ docker compose -f docker-compose.airflow.yaml build --build-arg TARGETARCH=$(una
 docker compose -f docker-compose.airflow.yaml build --build-arg TARGETARCH=amd64
 ```
 
-2. Run the compose environment
+2. Run the compose environment.
 
 ```bash
 docker compose -f docker-compose.airflow.yaml -f docker-compose.common.yaml up -d
@@ -73,23 +74,41 @@ docker compose -f docker-compose.airflow.yaml -f docker-compose.common.yaml up -
 
 To run the **blogs_batch_load** data pipeline within the local docker compose environment follow the below steps.
 
-1. Navigate to **http://localhost:8080** and login with the below credentials
+1. Navigate to **http://localhost:8080** and login with the below credentials.
 * **user_id**: airflow
 * **password**: airflow
 
-![Login Page](./docs/images/guide/login.png)
+![Airflow Login Page](./docs/images/guide/airflow_login.png)
 
-1. Activate the DAG **blogs_batch_load** by clicking the toggle indicated in the below image
+2. Activate the DAG **blogs_batch_load** by clicking the toggle indicated in the below image.
 
 ![DAG Page](./docs/images/guide/dags_page.png)
 
-3. Click the button shown in the below image to trigger execution of the DAG / pipeline
+3. Click the button shown in the below image to trigger execution of the DAG / pipeline.
 
 ![Trigger DAG](./docs/images/guide/batch_dag.png)
 
 4. In the left pane click on green rectangle for the ran instance. This should display a successful DAG run.
 
 ![DAG Success](./docs/images/guide/dag_success.png)
+
+### Accessing the Dashboard
+
+To access the Metabase dashboard associated with the blogs data follow the below steps.
+
+1. Navigate to **http://localhost:3000** and login with the below credentials
+* **Email Address**: admin@test.com
+* **password**: metabaseadmin1
+
+![Metabase Login Page](./docs/images/guide/metabase_login.png)
+
+2. In the left pane click on "_Our analytics_" and then "_blogs-dashboard_" under "_Dashboards_".
+
+![Our Analytics](./docs/images/guide/our_analytics.png)
+
+3. You should be able to view and explore the dashboard pictured below.
+
+![Our Analytics](./docs/images/guide/blogs_dashboard.png)
 
 ### Spinning Down the Environment
 
