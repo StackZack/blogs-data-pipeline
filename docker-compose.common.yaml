@@ -1,0 +1,48 @@
+version: "3.8"
+services:
+  datawarehouse:
+    image: postgres:16.1
+    ports:
+      - 5432:5432
+    env_file:
+      - ./docker/postgres/envs/datawarehouse.env
+    volumes:
+      - ./docker/postgres/scripts/postgres_init.sql:/docker-entrypoint-initdb.d/postgres_init.sql
+      - datawarehouse-db-volume:/var/lib/postgresql/data
+      - ./docker/nfs/shared:/shared
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "user", "dw-blogs"]
+      interval: 5s
+      retries: 5
+    restart: always
+
+  sftp-server:
+    image: atmoz/sftp:debian
+    volumes:
+      - ./data:/home/blog_user/upload
+      - ./docker/sftp/ssh/ssh_host_rsa_key.pub:/home/blog_user/.ssh/keys/ssh_host_rsa_key.pub
+    ports:
+      - "2222:22"
+    command: blog_user:password:1001
+
+  spark-main:
+    image: bitnami/spark:3.5.0
+    env_file:
+      - ./docker/spark/envs/spark-primary.env
+    volumes:
+      - ./docker/nfs/shared:/shared/data
+    ports:
+      - '8180:8080'
+      - '7077:7077'
+
+  spark-worker:
+    image: bitnami/spark:3.5.0
+    env_file:
+      - ./docker/spark/envs/spark-secondary.env
+    volumes:
+      - ./docker/nfs/shared:/shared/data
+    ports:
+      - '8081:8081'
+
+volumes:
+  datawarehouse-db-volume:

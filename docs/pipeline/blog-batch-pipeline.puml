@@ -1,0 +1,56 @@
+@startuml
+
+left to right direction
+
+skinparam DatabaseBackgroundColor #325ea8
+
+package "SFTP Server" #CD7F32 {
+  [blogs.csv]
+  [users.csv]
+  [comments.csv]
+  [favorites.csv]
+  [tags.csv]
+  [opinions.csv]
+}
+
+database "PostgreSQL" {
+    note bottom of "Stage Tables" : Stage tables loaded via\nstraight load (truncate\nthen insert)
+    package "Stage Tables" #C0C0C0 {
+        [stg_blogs]
+        [stg_users]
+        [stg_comments]
+        [stg_favorites]
+        [stg_tags]
+        [stg_opinions]
+    }
+
+    note bottom of "Gold Tables" : Gold tables loaded via\nincremental PySpark\nbatch job
+    package "Gold Tables" #FFD700 {
+        [blog_activity]
+        [blogs]
+        [users]
+        [comments]
+        [favorites]
+        [opinions]
+    }
+}
+
+[blogs.csv] -down-> [stg_blogs]
+[users.csv] -down-> [stg_users]
+[comments.csv] -down-> [stg_comments]
+[favorites.csv] -down-> [stg_favorites]
+[tags.csv] -down-> [stg_tags]
+[opinions.csv] -down-> [stg_opinions]
+
+[stg_blogs] -down-> [blog_activity]
+[stg_comments] -down-> [blog_activity]
+[stg_favorites] -down-> [blog_activity]
+[stg_opinions] -down-> [blog_activity]
+[stg_blogs] -down-> [blogs]
+[stg_users] -down-> [users]
+[stg_comments] -down-> [comments]
+[stg_favorites] -down-> [favorites]
+[stg_tags] -down-> [blogs]
+[stg_opinions] -down-> [opinions]
+
+@enduml

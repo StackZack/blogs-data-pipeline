@@ -1,0 +1,73 @@
+@startuml
+
+skinparam linetype ortho
+
+entity "users" as users {
+  *user_id : INT <<PK>>
+  --
+  first_name : VARCHAR(50)
+  last_name : VARCHAR(50)
+  email : VARCHAR(150)
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+entity "blogs" as blogs {
+  *blog_id : INT <<PK>>
+  --
+  *user_id : INT <<FK>>
+  *tags : ARRAY[INT] <<FK>>
+  title : VARCHAR(150)
+  content : TEXT
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+entity "comments" as comments {
+  *comment_id : INT <<PK>>
+  --
+  *blog_id : INT <<FK>>
+  *user_id : INT <<FK>>
+  content : TEXT
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+entity "favorites" as favorites {
+  *favorite_id : INT <<PK>>
+  --
+  *blog_id : INT <<FK>>
+  *user_id : INT <<FK>>
+  favorite_date : DATE
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+entity "opinions" as opinions {
+  *opinion_id : INT <<PK>>
+  --
+  *blog_id : INT <<FK>>
+  *user_id : INT <<FK>>
+  opinion : BOOLEAN
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+entity "tags" as tags {
+  *tag_id : INT <<PK>>
+  --
+  name: VARCHAR(50)
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+users ||..o{ blogs
+users ||..o{ comments
+blogs ||..o{ comments
+users ||..o{ favorites
+blogs ||..o{ favorites
+users ||..o{ opinions
+blogs ||..o{ opinions
+blogs }o..o{ tags
+
+@enduml
