@@ -30,7 +30,7 @@ def test_sftp_download(file_name, mocker, patch_get_variable):
     mock_retrieve_file = mocker.patch.object(SFTPHook, "retrieve_file")
     task.execute(context={})
     assert f"/upload/{file_name}.csv" == mock_retrieve_file.call_args_list[0][0][0]
-    assert f"/shared/data/{file_name}.csv" == mock_retrieve_file.call_args_list[0][0][1]
+    assert f"/shared/data/{file_name}_{{{{ ts_nodash }}}}.csv" == mock_retrieve_file.call_args_list[0][0][1]
 
 
 @pytest.mark.parametrize("table_name", table_names)

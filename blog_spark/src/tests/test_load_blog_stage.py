@@ -1,8 +1,10 @@
+"""Unit tests for load_blog_stage_tables"""
 from jobs.batch.load_blog_stage_tables import mask_users_df
 from jobs.batch.schema import staging_users
 
 
 def check_masked_string(string):
+    """Confirms that all characters in string are * value"""
     return all(char == "*" for char in string)
 
 
