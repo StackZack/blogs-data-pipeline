@@ -125,9 +125,6 @@ Although the proof of concept is working there are a couple improvements which c
 * Currently the secrets for connections are plaintext in this repo and would not be acceptable in any deployed architectures
   * The repo is set up to use the Airflow [Secrets Backend](https://airflow.apache.org/docs/apache-airflow/stable/security/secrets/secrets-backend/index.html)
     * This currently uses local files but could be improved to use something like Hashicorp Vault
-* The Users data has plaintext values for first_name, last_name, and email
-  * PII fields associated with actual individuals should be masked or not ingested at all if not needed for analysis
-  * Within this simple POC fake data was generated for fake individuals which are plaintext values
 * There are unit tests present for the Airflow DAG but they could be made more robust
   * Currently there are general unit tests for the DAG tasks, checking to see if the DAG can be imported, and if there are any cycles
   * The existing unit tests for the **SQLExecuteQueryOperator** could include more meaningful asserts

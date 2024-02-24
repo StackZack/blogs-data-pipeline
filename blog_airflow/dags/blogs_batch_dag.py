@@ -26,7 +26,7 @@ for file_name in dag_params["files"]:
         dag=dag,
         operation="get",
         ssh_conn_id=dag_params["ssh_conn_id"],
-        local_filepath=f"/shared/data/{file_name}",
+        local_filepath=f"/shared/data/{name}_{{{{ ts_nodash }}}}.csv",
         remote_filepath=f"/upload/{file_name}",
     )
     sftp_extract_tasks.append(extract_sftp)
@@ -42,12 +42,7 @@ load_stage_tables = SparkSubmitOperator(
     executor_memory=spark_job_params["executor_memory"],
     total_executor_cores=spark_job_params["total_executor_cores"],
     driver_memory=spark_job_params["driver_memory"],
-    application_args=[
-        "--job",
-        "load_blog_stage_tables",
-        "--jobtype",
-        "batch",
-    ],
+    application_args=["--job", "load_blog_stage_tables", "--jobtype", "batch", "--jobts", "{{ ts_nodash }}"],
 )
 
 load_users = SQLExecuteQueryOperator(
