@@ -127,6 +127,9 @@ Although the proof of concept is working there are a couple improvements which c
   * Currently there are general unit tests for the DAG tasks, checking to see if the DAG can be imported, and if there are any cycles
   * The existing unit tests for the **SQLExecuteQueryOperator** could include more meaningful asserts
   * Unit tests could be added to confirm that the SQL associated with **SQLExecuteQueryOperator** tasks renders properly
+* Update the data ingested to include a boolean flag for tables to indicate whether a user / blog / comment is still present and not deleted
+  * Currently the process accounts for inserts and updates but doesn't consider when upstream records may be deleted
+  * Instead of an indicator some tables could have values updated to NULL (_like the **opinion** column for example_)
 
 ## Development
 
