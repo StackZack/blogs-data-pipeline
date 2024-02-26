@@ -1,0 +1,8 @@
+{
+    "conn_type": "postgres",
+    "host": "datawarehouse",
+    "schema": "dw-blogs",
+    "login": "user",
+    "password": "password",
+    "port": "5432"
+}

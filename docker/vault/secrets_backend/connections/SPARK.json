@@ -1,0 +1,5 @@
+{
+    "conn_type": "spark",
+    "host": "spark://spark-main",
+    "port": "7077"
+}
