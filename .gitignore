@@ -165,3 +165,6 @@ out/docs
 # Airflow
 blog_airflow/logs
 docker/nfs/shared/*.csv
+
+# Spark
+blog_spark/src/libs

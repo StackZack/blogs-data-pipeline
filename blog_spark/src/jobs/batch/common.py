@@ -2,6 +2,7 @@
 from pyspark.conf import SparkConf
 from pyspark.sql import SparkSession
 from pyspark.sql.dataframe import DataFrame
+from requests import request
 
 
 class BatchSessionHelper:
@@ -15,6 +16,18 @@ class BatchSessionHelper:
         conf = SparkConf().setAppName(app_name)
         self.spark = SparkSession.builder.config(conf=conf).getOrCreate()
 
+    def get_vault_secret(self, vault_path: str):
+        """
+        Retrieves JSON secret from Vault
+
+        :param vault_path: Path to secret in form of <engine>/<path>; ex: secret/test_secret
+        :type vault_path: str
+        """
+        url = f"http://vault:8200/v2/{vault_path}"
+        headers = {"content-type": "application/json", "Accept-Charset": "UTF-8", "X-Vault-Token": "token"}
+        response = request.get(url, headers=headers)
+        return response.json()
+
     def read_table_to_df(self, dbtable: str) -> DataFrame:
         """
         Selects table from postgres datawarehouse to a dataframe
@@ -24,12 +37,13 @@ class BatchSessionHelper:
         :return: Table data
         :rtype: DataFrame
         """
+        secret = self.get_vault_secret("secret/connections/DATAWAREHOUSE")
         return (
             self.spark.read.format("jdbc")
             .option("driver", "org.postgresql.Driver")
             .option("url", "jdbc:postgresql://datawarehouse/dw-blogs")
             .option("user", "user")
-            .option("password", "password")
+            .option("password", secret["password"])
             .option("dbtable", dbtable)
             .load()
         )

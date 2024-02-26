@@ -28,6 +28,7 @@ A diagram of this process can be seen below:
 * [Docker](https://www.docker.com)
 * [Docker Compose](https://docs.docker.com/compose/)
 * [Metabase](https://www.metabase.com)
+* [Vault](https://www.vaultproject.io)
 
 ### Data Diagrams
 
@@ -122,9 +123,6 @@ docker compose -f docker-compose.airflow.yaml -f docker-compose.common.yaml down
 
 Although the proof of concept is working there are a couple improvements which could be made:
 
-* Currently the secrets for connections are plaintext in this repo and would not be acceptable in any deployed architectures
-  * The repo is set up to use the Airflow [Secrets Backend](https://airflow.apache.org/docs/apache-airflow/stable/security/secrets/secrets-backend/index.html)
-    * This currently uses local files but could be improved to use something like Hashicorp Vault
 * There are unit tests present for the Airflow DAG but they could be made more robust
   * Currently there are general unit tests for the DAG tasks, checking to see if the DAG can be imported, and if there are any cycles
   * The existing unit tests for the **SQLExecuteQueryOperator** could include more meaningful asserts
