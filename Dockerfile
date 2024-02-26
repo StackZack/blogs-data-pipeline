@@ -1,4 +1,4 @@
-FROM alpine:3.19.1 AS builder
+FROM python:3.11.8-alpine3.19 AS builder
 
 # Install build related dependencies
 RUN apk add zip --no-cache make
@@ -6,6 +6,10 @@ RUN apk add zip --no-cache make
 # Copy source code and build file to builder
 COPY blog_spark blog_spark
 COPY Makefile Makefile
+
+# Install 3rd party libs
+RUN pip install -r /blog_spark/requirements.txt -t ./blog_spark/src/libs
+RUN touch ./blog_spark/src/libs/__init__.py
 
 # Build source code
 RUN make build

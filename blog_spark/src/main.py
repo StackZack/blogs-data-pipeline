@@ -9,6 +9,11 @@ if os.path.exists("jobs.zip"):
 else:
     sys.path.insert(0, "./jobs")
 
+if os.path.exists("libs.zip"):
+    sys.path.insert(0, "libs.zip")
+else:
+    sys.path.insert(0, "./libs")
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--job", type=str, required=True)
 parser.add_argument("--jobtype", type=str, required=True)
