@@ -144,3 +144,17 @@ python -m venv venv
 pip install -r requirements.txt
 pre-commit install
 ```
+
+### Accessing Vault
+
+To access Hashicorp Vault follow the below steps.
+
+1. Navigate to **http://localhost:8200/ui/vault* and login with the below credentials.
+* **Method**: token
+* **Token**: root
+
+![Vault Login](./docs/images/guide/vault_login.png)
+
+2. Navigate to **secret** engine to redirect to a view that has the **connection** and **variable** secret paths for airflow.
+
+![Our Analytics](./docs/images/guide/vault_secrets.png)
