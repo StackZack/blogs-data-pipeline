@@ -19,6 +19,12 @@ A diagram of this process can be seen below:
 
 ![Pipeline Overview](./docs/images/architecture/pipeline-overview.png)
 
+### Architecture
+
+The names of the components in the below diagram correspond to the names of the containers this repo creates. Details on which ports are exposed and used for communication are also included.
+
+![Architecture Overview](./docs/images/architecture/docker-overview.png)
+
 ### Technologies Used
 
 * [Apache Airflow](https://airflow.apache.org)
