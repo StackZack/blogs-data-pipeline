@@ -158,7 +158,7 @@ pre-commit install
 
 To access Hashicorp Vault follow the below steps.
 
-1. Navigate to **http://localhost:8200/ui/vault* and login with the below credentials.
+1. Navigate to **http://localhost:8200/ui/vault** and login with the below credentials.
 * **Method**: token
 * **Token**: root
 
